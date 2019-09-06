@@ -1,3 +1,8 @@
 <resources>
     <string name="app_name">BluetoothDiscoverer</string>
+    <string name="null_discovered_device_name">(null)</string>
+    <string name="text_discovering_devices">Discovering Devices</string>
+    <string name="denied_location_message">Cannot discover devices without allowing location permission</string>
+    <string name="denied_bluetooth_enable_message">Cannot discover devices without enabling bluetooth</string>
+
 </resources>
