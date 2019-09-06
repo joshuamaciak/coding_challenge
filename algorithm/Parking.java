@@ -1,4 +1,4 @@
-import java.util.ArrayDeque;
+import java.util.Stack;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -36,32 +36,38 @@ public class Parking {
     }
 
     private static void PrintDirections(final List<Integer> initial, final List<Integer> target) {
-        final LotState found = bfs(initial, target);
+        final LotState found = dfs(initial, target);
         if(found == null) {
             System.out.println("Couldn't find path from initial to target state (This should never happen)");
             return;
-        }
+        }            
+
         printLotDirections(found);
     }
 
     private static void printLotDirections(final LotState lotState) {
-        if (lotState == null) {
-            return;
+        final Stack<LotState> stack = new Stack<>();
+        LotState stateIter = lotState;
+        while(stateIter != null) {
+            stack.push(stateIter);
+            stateIter = stateIter.parent;
         }
-        printLotDirections(lotState.parent);
-        if (lotState.move != null) {
-            System.out.println(String.format("Move car from space %d to %d", lotState.move.space1, lotState.move.space2));
+        while(!stack.isEmpty()) {
+            stateIter = stack.pop();
+            if (stateIter.move != null) {
+                System.out.println(String.format("Move car from space %d to %d", stateIter.move.space1, stateIter.move.space2));
+            }
         }
     }
 
-    private static LotState bfs(final List<Integer> initialState, final List<Integer> target) {
+    private static LotState dfs(final List<Integer> initialState, final List<Integer> target) {
         final LotState needle = new LotState(target,null, null);
         final Set<LotState> visited = new HashSet<>();
-        final Queue<LotState> frontier = new ArrayDeque<>();
-        frontier.add(new LotState(initialState, null, null));
+        final Stack<LotState> stack = new Stack<>();
+        stack.push(new LotState(initialState, null, null));
 
-        while(!frontier.isEmpty()) {
-            final LotState state = frontier.remove();
+        while(!stack.isEmpty()) {
+            final LotState state = stack.pop();
             visited.add(state);
             // compare states. if we're at the goal state we're done
             if (needle.equals(state)) {
@@ -69,7 +75,9 @@ public class Parking {
             }
             // else, expand the other states sans already visited
             final List<LotState> children = expandState(state, visited);
-            frontier.addAll(children);
+            for(LotState child : children) {
+                stack.push(child);
+            } 
         }
         return null;
     }
@@ -171,6 +179,7 @@ public class Parking {
             child.parent = state;
             if (!visited.contains(child)) {
                 unvisitedChildren.add(child);
+            } else {
             }
         }
         return unvisitedChildren;
