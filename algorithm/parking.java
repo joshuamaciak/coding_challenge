@@ -5,12 +5,32 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Queue;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class Parking {
     public static void main(final String... args) {
-        final List<Integer> initial = Arrays.asList(0,4,2,5,1,3);
-        final List<Integer> target = Arrays.asList(0,1,5,3,2,4);
+        if (args.length < 2) {
+            System.out.println("usage: java Parking [initial] [target]");
+            return;
+        }
+
+        final List<Integer> initial = Arrays.stream(args[0].split(","))
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+        final List<Integer> target = Arrays.stream(args[1].split(","))
+                .map(Integer::parseInt)
+                .collect(Collectors.toList());
+
+        if (initial.size() != target.size()) {
+            System.out.println("Initial & target states must be the same size");
+            return;
+        }
+
+        if (!initial.contains(0) || !target.contains(0)) {
+            System.out.println("Initial & target states must have one empty space");
+        }
+
         PrintDirections(initial, target);
     }
 
@@ -31,7 +51,6 @@ public class Parking {
         if (lotState.move != null) {
             System.out.println(String.format("Move car from space %d to %d", lotState.move.space1, lotState.move.space2));
         }
-//        System.out.println(lotState);
     }
 
     private static LotState bfs(final List<Integer> initialState, final List<Integer> target) {

@@ -1,0 +1,4 @@
+Build
+javac Parking.java
+Run
+java Parking [initial] [target]
