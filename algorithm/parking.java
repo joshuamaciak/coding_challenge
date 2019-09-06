@@ -3,6 +3,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Objects;
 import java.util.Queue;
 import java.util.Set;
 import java.util.stream.Collectors;
@@ -121,13 +122,22 @@ public class Parking {
             return newState;
         }
 
+        /**
+         * NOTE: equals & hashcode only compare state. this should never
+         * be done in production, but just trying to hack an algorithm here
+        **/
         @Override
         public boolean equals(Object o) {
             final LotState that = (LotState) o;
             if (that == null) {
                 return false;
             }
-            return that.state == this.state || (that.state != null && that.state.equals(this.state));
+            return Objects.equals(this.state, that.state);
+        }
+
+        @Override
+        public int hashCode() {
+            return Objects.hash(state);
         }
 
         @Override
