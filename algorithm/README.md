@@ -26,15 +26,15 @@ This clearly isn't the most efficient way in terms of memory or runtime, but whe
 
 One important thing to note is that we want to prevent getting stuck by visiting the same state over & over again, so we keep a set of our visited states.
 
-### First attempt - BFS `debcf61`
+### First attempt - BFS `46c4f42`
 Since finding a solution can be generalized into finding a path from the root to the goal state, the problem essentially becomes choosing an algorithm that executes the search efficiently.
 
-BFS visits each node in a level before moving on to the next. One benefit of this is that we are guaranteed to find the shortest path to the goal state. This is helpful if we're trying to save the valet some time, but that's not the case. The big problem with using BFS is that it really struggles with trees with a high branching factor. As mentioned earlier, each node has `n-1` possible states. It also requires a lot of memory, and in my testing performance was awful at `n=7` and beyond.
+BFS visits each node in a level before moving on to the next. One benefit of this is that we are guaranteed to find the shortest path to the goal state. This is helpful if we're trying to save the valet some time, but that's not the case. The big problem with using BFS is that it really struggles with trees with a high branching factor. As mentioned earlier, each node has `n-1` possible states. It also requires a lot of memory, and in my testing I began getting OOM errors at `n=8` and beyond.
 
-### Second attempt - DFS w/ iterative deepening
-After building the BFS, my next idea was to use another familiar search algo, DFS. DFS explores deeper into a tree & backtracks when a solution isn't found. This performs better than searching every node at a level if the branching factor is high & the goal state is deeper in the tree. Additionally it doesn't have the memory requirements that bfs has.
+### Second attempt - DFS
+After building the BFS, my next idea was to use another familiar search algo, DFS. DFS explores deeper into a tree & backtracks when a solution isn't found. This performs better than searching every node at a level if the branching factor is high & the goal state is deeper in the tree. Additionally it doesn't have the memory requirements that bfs has. One issue I noticed early on is that the recursive dfs traversal -- although easier to read --  would often throw a stack overflow when the call stack became too large. To remedy this, I switched to using a stack iteratively. 
 
-One gotcha with dfs is that it can get stuck going down a bad path, potentially forever in a problem like this. To overcome this, we can incrementally perform the search with an increasing limit.
+One gotcha with dfs is that it can get stuck going down a bad path, potentially forever in a problem like this. If I had more time to improve the algo, I would use iterative-deepening for dfs to avoid this issue.
 
 ### If I had more time - Heuristics
 If I had more time to solve this problem, I'd consider using some sort of heuristic function to potentially speed up the algorithm. For example,
