@@ -41,18 +41,22 @@ public class Parking {
             System.out.println("Couldn't find path from initial to target state (This should never happen)");
             return;
         }            
-        System.out.println("Found solution");
 
         printLotDirections(found);
     }
 
     private static void printLotDirections(final LotState lotState) {
-        if (lotState == null) {
-            return;
+        final Stack<LotState> stack = new Stack<>();
+        LotState stateIter = lotState;
+        while(stateIter != null) {
+            stack.push(stateIter);
+            stateIter = stateIter.parent;
         }
-        printLotDirections(lotState.parent);
-        if (lotState.move != null) {
-            System.out.println(String.format("Move car from space %d to %d", lotState.move.space1, lotState.move.space2));
+        while(!stack.isEmpty()) {
+            stateIter = stack.pop();
+            if (stateIter.move != null) {
+                System.out.println(String.format("Move car from space %d to %d", stateIter.move.space1, stateIter.move.space2));
+            }
         }
     }
 
